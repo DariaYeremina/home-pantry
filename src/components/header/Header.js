@@ -4,6 +4,7 @@ import logo from '../../assets/logo.svg';
 import styles from './header.module.scss';
 import Button from '../button/Button';
 import Auth from '../auth/Auth';
+import AddItem from '../addItem/AddItem';
 import FirebaseContext from '../../Firebase/context';
 
 class Header extends React.Component{
@@ -11,7 +12,8 @@ class Header extends React.Component{
         super(props);
         this.state = {
             isModalOpen: false,
-            authButtonTitle: localStorage.getItem('isLogged') === 'true' ? 'Wyjdź' : 'Wejdź'
+            authButtonTitle: localStorage.getItem('isLogged') === 'true' ? 'Wyjdź' : 'Wejdź',
+            isAddModalOpen: true
         }
     }
 
@@ -24,6 +26,18 @@ class Header extends React.Component{
     closeModal = () => {
         this.setState({
             isModalOpen: false
+        })
+    }
+
+    openAddModal = () => {
+        this.setState({
+            isAddModalOpen: true
+        })
+    }
+
+    closeAddModal = () => {
+        this.setState({
+            isAddModalOpen: false
         })
     }
 
@@ -54,6 +68,7 @@ class Header extends React.Component{
                     <NavLink to="/list"
                             className={styles.navLink}
                             activeClassName={styles.navLinkActive}>Lista zakupów</NavLink>
+                    {localStorage.getItem('isLogged') === 'true' && <Button onClick={this.openAddModal} secondary>Dodaj produkt</Button>}
                 </nav>
                 <div>
                     <Button onClick={this.openModal}>{this.state.authButtonTitle}</Button>
@@ -65,6 +80,12 @@ class Header extends React.Component{
                                         setLogin={this.setLogin} 
                                         setLogout={this.setLogout}
                                         closeModal={this.closeModal} />}
+                </FirebaseContext.Consumer> }
+            
+            { this.state.isAddModalOpen && 
+                <FirebaseContext.Consumer>
+                    {firebase => <AddItem firebase={firebase} 
+                                          closeModal={this.closeAddModal}/>}
                 </FirebaseContext.Consumer> }
             </>
         )

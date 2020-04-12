@@ -29,6 +29,16 @@ class Auth extends React.Component {
         }
     }
 
+    successActions = (authUser) => {
+        localStorage.setItem('isLogged', true);
+        localStorage.setItem('uid', authUser.user.uid);
+        this.setState({
+            isLogged: true
+        })
+        this.props.setLogin();
+        this.props.closeModal();
+    }
+
     handleInput = (e) => {
         this.setState({
             [e.target.name]: e.target.value
@@ -38,30 +48,20 @@ class Auth extends React.Component {
     handleAuth = () => {
         this.props.firebase.doCreateUserWithEmailAndPassword(this.state.email, this.state.password)
             .then(authUser => {
-                localStorage.setItem('isLogged', true);
-                this.setState({
-                    isLogged: true
-                })
-                this.props.setLogin();
-                this.props.closeModal();
+                this.successActions(authUser);
             })
             .catch(error => {
-                this.setState({ error: error });
+                this.setState({ error: error.message });
             });
     }
 
     handleSingIn = () => {
         this.props.firebase.doSignInWithEmailAndPassword(this.state.email, this.state.password)
             .then(authUser => {
-                localStorage.setItem('isLogged', true);
-                this.setState({
-                    isLogged: true
-                })
-                this.props.setLogin();
-                this.props.closeModal();
+                this.successActions(authUser);
             })
             .catch(error => {
-                this.setState({ error: error });
+                this.setState({ error: error.message });
             });
     }
     
@@ -69,6 +69,7 @@ class Auth extends React.Component {
         this.props.firebase.doSignOut()
             .then(() => {
                 localStorage.removeItem('isLogged');
+                localStorage.removeItem('uid');
                 this.setState({
                     isLogged: false
                 });
@@ -77,6 +78,9 @@ class Auth extends React.Component {
     }
 
     render () {
+        let _error;
+        this.state.error ? _error = <p className={styles.error}>{this.state.error}</p> : _error = null;
+
         let inner;
         localStorage.getItem('isLogged') === 'true' ? 
         inner = <div className={styles.wrapper}>
@@ -97,6 +101,7 @@ class Auth extends React.Component {
                             label={passwordParameters.label} 
                             value={this.state.password}
                             onChange={this.handleInput}/>
+                            {_error}
                     <div className={styles.modalActions}>
                         <Button onClick={this.handleAuth}>Zarejestruj się</Button>
                         <Button onClick={this.handleSingIn} secondary>Zaloguj się</Button>
