@@ -3,6 +3,7 @@ import styles from './addItem.module.scss';
 import close from '../../assets/close.svg';
 import Button from '../button/Button';
 import Input from '../input/Input';
+import Select from '../select/Select';
 
 const titleParameters = {
     name: 'title',
@@ -10,15 +11,36 @@ const titleParameters = {
     label: 'Nazwa',
 };
 
+const selectParameters = {
+    name: 'chosenCategory',
+    label: 'Kategoria',
+};
+
 class AddItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: ''
+            title: '',
+            categories: [],
+            chosenCategory: ''
         }
     }
 
+    getCategories = () => {
+        let get = this.props.firebase.getCategories();
+        get.on('value', (snapshot) => {
+            this.setState({
+                categories: [...snapshot.val()]
+            })
+          });
+    }
+
+    componentDidMount () {
+        this.getCategories();
+    }
+
     handleInput = (e) => {
+        console.log(e.target)
         this.setState({
             [e.target.name]: e.target.value
         })
@@ -37,6 +59,11 @@ class AddItem extends React.Component {
                             label={titleParameters.label} 
                             value={this.state.title}
                             onChange={this.handleInput}/>
+                <Select items={this.state.categories}
+                        name={selectParameters.name}
+                        label={selectParameters.label}
+                        chosen={this.state.chosenCategory}
+                        onChange={this.handleInput} />
             </div>
         )
     }
