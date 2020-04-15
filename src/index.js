@@ -17,7 +17,9 @@ ReactDOM.render(
         <Header />
         <Switch>
           <Route path="/">
-            <StartView />
+          <FirebaseContext.Consumer>
+                {firebase => <StartView />}
+            </FirebaseContext.Consumer>
           </Route>
         </Switch>
       </BrowserRouter>

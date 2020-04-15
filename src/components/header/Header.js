@@ -13,7 +13,7 @@ class Header extends React.Component{
         this.state = {
             isModalOpen: false,
             authButtonTitle: localStorage.getItem('isLogged') === 'true' ? 'Wyjdź' : 'Wejdź',
-            isAddModalOpen: true
+            isAddModalOpen: false
         }
     }
 

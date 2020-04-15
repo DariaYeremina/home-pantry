@@ -36,7 +36,9 @@ class Firebase {
     this.auth.currentUser.updatePassword(password);
 
   // *** Resources API ***
-  getCategories = () => this.db.ref('categories');
+  getRequest = (url) => this.db.ref(url);
+  postRequest = (url, payload) => this.db.ref(url).set(payload);
+  getNewKey = (url) => {return this.db.ref().child(url).push().key};
 
   }
   
