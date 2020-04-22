@@ -1,6 +1,8 @@
 import React from 'react';
 import styles from './startView.module.scss';
 import FirebaseContext from '../../Firebase/context';
+import Product from '../../components/product/Product';
+import meat from '../../assets/categories/meat.svg';
 
 class StartView extends React.Component {
     constructor (props) {
@@ -15,7 +17,7 @@ class StartView extends React.Component {
         let get = this.props.firebase.getRequest(`products/${uid}`);
         get.on('value', (snapshot) => {
             this.setState({
-                products: {...snapshot.val()}
+                products: Object.values(snapshot.val())
             })
           });
     }
@@ -32,10 +34,11 @@ class StartView extends React.Component {
         let condition = this.objectIsEmpty();
         
         return (
-            <>
-            {  condition ? <h1>Nie masz produktów! Zaloguj się i dodaj!</h1> : null
+            <div className={styles.wrapper}>
+            {  condition ? <h1>Nie masz produktów! Zaloguj się i dodaj!</h1> : 
+                this.state.products.map((el, index) => <Product key={index} item={el} icon={meat}/>)
             }
-            </>
+            </div>
         )
     }
 };

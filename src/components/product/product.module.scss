@@ -1,0 +1,42 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    width: 48%;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.header {
+    display: flex;
+    width: 100%;
+    background-color: #5ca368;
+    border-radius: 15px 15px 0 0;
+    padding: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title {
+    color: #fff;
+}
+
+.icon {
+    width: 40px;
+    height: auto;
+    background-color: transparent;
+    
+    &Wrap {
+        background-color: #fff;
+        border-radius: 50%;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.content {
+    padding: 20px 10px;
+    border: 1px solid #eee;
+}
