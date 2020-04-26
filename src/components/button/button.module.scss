@@ -1,0 +1,15 @@
+.button {
+    display: inline-block;
+    max-width: 250px;
+    padding: 5px 15px;
+    text-align: center;
+    border: 2px solid #5ca368;
+    color: #5ca368;
+    text-decoration: none;
+    cursor: pointer;
+    &Secondary {
+        @extend .button;
+        background-color: #5ca368;
+        color: #fff;
+    }
+}
