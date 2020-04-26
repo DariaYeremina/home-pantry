@@ -4,6 +4,7 @@ import close from '../../assets/close.svg';
 import Button from '../button/Button';
 import Input from '../input/Input';
 import Select from '../select/Select';
+import propTypes from 'prop-types';
 
 const titleParameters = {
     name: 'title',
@@ -27,6 +28,16 @@ const amountParameters = {
     label: 'Ilość',
 };
 
+const modalTitle = {
+    add: 'Dodaj produkt do swojej spiżarni',
+    edit: 'Edytuj dane produktu'
+};
+
+const buttonTitle = {
+    add: 'Dodaj',
+    edit: 'Zapisz zmiany'
+};
+
 class AddItem extends React.Component {
     constructor(props) {
         super(props);
@@ -37,6 +48,16 @@ class AddItem extends React.Component {
             units: [],
             chosenUnit: '',
             amount: ''
+        }
+    }
+
+    setEntranceData = () => {
+        if (this.props.entranceData) {
+            Object.keys(this.props.entranceData).forEach(key => {
+                this.setState({
+                    [key]: this.props.entranceData[key]
+                });
+            })
         }
     }
 
@@ -61,16 +82,16 @@ class AddItem extends React.Component {
     componentDidMount () {
         this.getCategories();
         this.getUnits();
+        this.setEntranceData();
     }
 
     handleInput = (e) => {
-        console.log(e.target)
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
-    postNewProduct = (e) => {
+    writeAction = () => {
         let item = {
             title: this.state.title,
             chosenCategory: this.state.chosenCategory,
@@ -79,11 +100,22 @@ class AddItem extends React.Component {
         }
         let uid = localStorage.getItem('uid');
         let newKey = this.props.firebase.getNewKey(`products/${uid}`);
-        this.props.firebase.postRequest(`products/${uid}/${newKey}`, item)
+        this.request(uid, item, newKey)
             .then(() => {
                 this.props.closeModal();
             })
     }
+
+    request = (uid, item, newKey) => {
+        if (this.props.action === 'add') {
+            return this.props.firebase.postRequest(`products/${uid}/${newKey}`, item);
+        } 
+        if (this.props.action === 'edit') {
+            return this.props.firebase.updateRequest(`products/${uid}/${this.props.id}`, item);
+        }
+    }
+
+    
 
     render () {
         return (
@@ -91,7 +123,7 @@ class AddItem extends React.Component {
                 <img onClick={this.props.closeModal} 
                     className={styles.close}
                     src={close} alt="close" />
-                <h2 className={styles.title}>Dodaj produkt swojej spiżarni</h2>
+                <h2 className={styles.title}>{modalTitle[this.props.action]}</h2>
                 <Input name={titleParameters.name}
                             placeholder={titleParameters.placeholder}
                             label={titleParameters.label} 
@@ -113,11 +145,20 @@ class AddItem extends React.Component {
                         chosen={this.state.chosenUnit}
                         onChange={this.handleInput} />
                 <div className={styles.modalActions}>
-                    <Button onClick={this.postNewProduct}>Dodaj</Button>
+                <Button onClick={this.writeAction}>{buttonTitle[this.props.action]}</Button>
                 </div>
             </div>
         )
     }
+}
+
+AddItem.propTypes = {
+    action: propTypes.oneOf(['add', 'edit']),
+    entranceData: propTypes.object
+}
+
+AddItem.defaultProps = {
+    action: 'add'
 }
 
 export default AddItem;

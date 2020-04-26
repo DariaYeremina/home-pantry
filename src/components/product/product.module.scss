@@ -19,10 +19,11 @@
 
 .title {
     color: #fff;
+    margin: 10px 0;
 }
 
 .icon {
-    width: 40px;
+    width: 30px;
     height: auto;
     background-color: transparent;
     
@@ -39,4 +40,20 @@
 .content {
     padding: 20px 10px;
     border: 1px solid #eee;
+    position: relative;
+    & p {
+        margin-top: 0;
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.actionsWrapper {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    & * {
+       margin-left: 10px; 
+    }
 }

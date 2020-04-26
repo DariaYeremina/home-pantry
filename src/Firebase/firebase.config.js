@@ -39,7 +39,9 @@ class Firebase {
   getRequest = (url) => this.db.ref(url);
   postRequest = (url, payload) => this.db.ref(url).set(payload);
   getNewKey = (url) => {return this.db.ref().child(url).push().key};
-
+  updateRequest = (url, payload) => this.db.ref(url).update(payload);
+  deleteRequest = (url) => this.db.ref(url).remove();
+  
   }
   
 export default Firebase;
