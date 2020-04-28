@@ -34,8 +34,9 @@ class Auth extends React.Component {
         localStorage.setItem('uid', authUser.user.uid);
         this.setState({
             isLogged: true
-        })
+        });
         this.props.setLogin();
+        this.props.store.getProducts(this.props.firebase)
         this.props.closeModal();
     }
 
@@ -73,6 +74,7 @@ class Auth extends React.Component {
                 this.setState({
                     isLogged: false
                 });
+                this.props.store.clearProducts();
                 this.props.setLogout();
             })
     }

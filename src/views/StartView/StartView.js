@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './startView.module.scss';
 import FirebaseContext from '../../Firebase/context';
 import Product from '../../components/product/Product';
+import Loader from '../../components/loader/Loader'
 import bakery from '../../assets/categories/bakery.svg';
 import cake from '../../assets/categories/cake.svg';
 import cheese from '../../assets/categories/cheese.svg';
@@ -52,25 +53,9 @@ const iconsNames = {
 }
 
 class StartView extends React.Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            products: {}
-        }
-    }
-
-    getProducts = () => {
-        let uid = localStorage.getItem('uid');
-        let get = this.props.firebase.getRequest(`products/${uid}`);
-        get.on('value', (snapshot) => {
-            this.setState({
-                products: Object.entries(snapshot.val())
-            })
-          });
-    }
 
     objectIsEmpty = () => {
-        return Object.keys(this.state.products).length === 0 && this.state.products.constructor;
+        return Object.keys(this.props.store.products).length === 0 && this.props.store.products.constructor;
     }
 
     findIconName = (category) => {
@@ -81,22 +66,31 @@ class StartView extends React.Component {
         }
     }
 
+    isLogged = () => { return localStorage.getItem('isLogged') };
+
     componentDidMount () {
-        this.getProducts();
+        if (this.isLogged()) {
+            this.props.store.getProducts(this.props.firebase);
+        } else {
+            this.props.store.toggleDataLoading(true);
+        }
     }
 
     render () {
         let condition = this.objectIsEmpty();
-        
-        return (
+        let headingText = this.isLogged() ? 'Nie masz produktów' : 'Zaloguj się żeby zobaczyć swoje produkty';
+
+        return ( 
             <FirebaseContext.Consumer>
                 {firebase => <div className={styles.wrapper}>
-                                {  condition ? <h1>Nie masz produktów! Zaloguj się i dodaj!</h1> : 
-                                    this.state.products.map((el, index) => <Product key={index} 
+                                {  this.props.store.isDataLoading ?
+                                    condition ? <h1 className={styles.title}>{headingText}</h1> : 
+                                    this.props.store.products.map((el, index) => <Product key={index} 
                                                                                     firebase={firebase}
                                                                                     id={el[0]}
                                                                                     item={el[1]} 
-                                                                                    icon={this.findIconName(el[1].chosenCategory)}/>)
+                                                                                    icon={this.findIconName(el[1].chosenCategory)}/>) :
+                                    <Loader />
                                 }
                              </div>
                 }

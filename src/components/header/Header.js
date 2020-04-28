@@ -6,6 +6,7 @@ import Button from '../button/Button';
 import Auth from '../auth/Auth';
 import AddItem from '../addItem/AddItem';
 import FirebaseContext from '../../Firebase/context';
+import { StoreConsumer } from '../../store/store.context';
 
 class Header extends React.Component{
     constructor (props) {
@@ -76,10 +77,14 @@ class Header extends React.Component{
             </header>
             { this.state.isModalOpen && 
                 <FirebaseContext.Consumer>
-                    {firebase => <Auth firebase={firebase} 
-                                        setLogin={this.setLogin} 
-                                        setLogout={this.setLogout}
-                                        closeModal={this.closeModal} />}
+                    {firebase => 
+                        <StoreConsumer>
+                            {store => <Auth firebase={firebase} 
+                                            store={store}
+                                            setLogin={this.setLogin} 
+                                            setLogout={this.setLogout}
+                                            closeModal={this.closeModal} />}
+                        </StoreConsumer>}
                 </FirebaseContext.Consumer> }
             
             { this.state.isAddModalOpen && 
