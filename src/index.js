@@ -15,7 +15,13 @@ ReactDOM.render(
     <FirebaseContext.Provider value={new Firebase()}>
       <BrowserRouter>
         <StoreProvider>
-          <Header />
+          <FirebaseContext.Consumer>
+            {firebase => 
+              <StoreConsumer>
+                {store => <Header firebase={firebase}
+                                  store={store}/>}
+              </StoreConsumer>}
+          </FirebaseContext.Consumer>
           <Switch>
             <Route path="/">
               <FirebaseContext.Consumer>

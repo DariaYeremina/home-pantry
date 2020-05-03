@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './input.module.scss';
 import propTypes from 'prop-types';
 
-const Input = ({type, name, placeholder, label, value, onChange}) => (
+const Input = ({type, name, placeholder, label, value, onChange, error, onBlur}) => (
     <>
     <label className={styles.label} htmlFor={name}>{ label }</label>
     <input  className={styles.input}
@@ -10,7 +10,9 @@ const Input = ({type, name, placeholder, label, value, onChange}) => (
             name={name}
             value={value}
             onChange={onChange}
+            onBlur={onBlur}
             placeholder={placeholder}/>
+    {error && <p className={styles.error}>{error}</p>}
     </>
 );
 

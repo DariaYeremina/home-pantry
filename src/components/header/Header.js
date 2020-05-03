@@ -48,10 +48,20 @@ class Header extends React.Component{
         })
     }
 
-    setLogout = () => {
-        this.setState({
-            authButtonTitle: 'Wejdź'
-        })
+    handleLogout = () => {
+        this.props.firebase.doSignOut()
+            .then(() => {
+                localStorage.removeItem('isLogged');
+                localStorage.removeItem('uid');
+                this.props.store.clearProducts();
+                this.setState({
+                    authButtonTitle: 'Wejdź'
+                })
+            })
+    }
+
+    handleAuthClick = () => {
+        localStorage.getItem('isLogged') === 'true' ? this.handleLogout() : this.openModal();
     }
 
     render () {
@@ -72,7 +82,7 @@ class Header extends React.Component{
                     {localStorage.getItem('isLogged') === 'true' && <Button onClick={this.openAddModal} secondary>Dodaj produkt</Button>}
                 </nav>
                 <div>
-                    <Button onClick={this.openModal}>{this.state.authButtonTitle}</Button>
+                    <Button onClick={this.handleAuthClick}>{this.state.authButtonTitle}</Button>
                 </div>
             </header>
             { this.state.isModalOpen && 
@@ -81,8 +91,7 @@ class Header extends React.Component{
                         <StoreConsumer>
                             {store => <Auth firebase={firebase} 
                                             store={store}
-                                            setLogin={this.setLogin} 
-                                            setLogout={this.setLogout}
+                                            setLogin={this.setLogin}
                                             closeModal={this.closeModal} />}
                         </StoreConsumer>}
                 </FirebaseContext.Consumer> }

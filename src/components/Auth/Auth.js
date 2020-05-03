@@ -1,22 +1,7 @@
 import React from 'react';
 import styles from './auth.module.scss';
 import close from '../../assets/close.svg';
-import Input from '../input/Input';
-import Button from '../button/Button';
-
-const emailParameters = {
-    type: 'email',
-    name: 'email',
-    placeholder: 'Wpisz email',
-    label: 'Email',
-};
-
-const passwordParameters = {
-    type: 'password',
-    name: 'password',
-    placeholder: 'Wpisz hasło',
-    label: 'Hasło',
-};
+import LoginForm from './LoginForm';
 
 class Auth extends React.Component {
     constructor (props) {
@@ -25,7 +10,8 @@ class Auth extends React.Component {
             isLogged: false,
             email: '',
             password: '',
-            error: null
+            error: null,
+            chosenOption: 0
         }
     }
 
@@ -47,7 +33,7 @@ class Auth extends React.Component {
     }
 
     handleAuth = () => {
-        this.props.firebase.doCreateUserWithEmailAndPassword(this.state.email, this.state.password)
+        return this.props.firebase.doCreateUserWithEmailAndPassword(this.state.email, this.state.password)
             .then(authUser => {
                 this.successActions(authUser);
             })
@@ -57,7 +43,7 @@ class Auth extends React.Component {
     }
 
     handleSingIn = () => {
-        this.props.firebase.doSignInWithEmailAndPassword(this.state.email, this.state.password)
+        return this.props.firebase.doSignInWithEmailAndPassword(this.state.email, this.state.password)
             .then(authUser => {
                 this.successActions(authUser);
             })
@@ -65,18 +51,11 @@ class Auth extends React.Component {
                 this.setState({ error: error.message });
             });
     }
-    
-    handleLogout = () => {
-        this.props.firebase.doSignOut()
-            .then(() => {
-                localStorage.removeItem('isLogged');
-                localStorage.removeItem('uid');
-                this.setState({
-                    isLogged: false
-                });
-                this.props.store.clearProducts();
-                this.props.setLogout();
-            })
+
+    setOption = (val) => {
+        this.setState({
+            chosenOption: val
+        })
     }
 
     render () {
@@ -84,31 +63,25 @@ class Auth extends React.Component {
         this.state.error ? _error = <p className={styles.error}>{this.state.error}</p> : _error = null;
 
         let inner;
-        localStorage.getItem('isLogged') === 'true' ? 
-        inner = <div className={styles.wrapper}>
-                    <Button onClick={this.handleLogout} secondary>Wyloguj się</Button>
+
+        this.state.chosenOption === 0 ? 
+        inner = <div className={styles.container}>
+                    <h3>Nie masz konta?</h3>
+                    <a onClick={() => this.setOption(1)}>Zarejestruj się!</a>
+                    <hr/>
+                    <h3>Już masz konto?</h3>
+                    <a onClick={() => this.setOption(2)}>Zaloguj się!</a>
                 </div>
         : 
-        inner = <>
-                    <h2 className={styles.title}>Wejdź do swojej spiżarni</h2>
-                    <Input type={emailParameters.type}
-                            name={emailParameters.name}
-                            placeholder={emailParameters.placeholder}
-                            label={emailParameters.label} 
-                            value={this.state.email}
-                            onChange={this.handleInput}/>
-                    <Input type={passwordParameters.type}
-                            name={passwordParameters.name}
-                            placeholder={passwordParameters.placeholder}
-                            label={passwordParameters.label} 
-                            value={this.state.password}
-                            onChange={this.handleInput}/>
-                            {_error}
-                    <div className={styles.modalActions}>
-                        <Button onClick={this.handleAuth}>Zarejestruj się</Button>
-                        <Button onClick={this.handleSingIn} secondary>Zaloguj się</Button>
-                    </div>
-                </>
+        inner = <LoginForm email={this.state.email}
+                            password={this.state.password}
+                            handleInput={this.handleInput}
+                            chosenOption={this.state.chosenOption}
+                            handleAuth={() => {
+                                this.state.chosenOption === 1 ? this.handleAuth() : this.handleSingIn()
+                            }}>
+                    {_error}
+                </LoginForm>
 
         return (
             <div className={styles.modal}>

@@ -25,7 +25,7 @@ export class StoreProvider extends React.Component {
         let get = firebase.getRequest(`products/${uid}`);
         get.on('value', (snapshot) => {
             this.setState({
-                products: Object.entries(snapshot.val()),
+                products: snapshot.val() ? Object.entries(snapshot.val()) : {},
                 isDataLoading: true
             })
           });
