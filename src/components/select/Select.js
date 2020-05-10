@@ -1,8 +1,9 @@
 import React from 'react';
 import styles from './select.module.scss';
+import Error from '../error/Error';
 import propTypes from 'prop-types';
 
-const Select = ({items, name, label, chosen, onChange}) => (
+const Select = ({items, name, label, chosen, onChange, error}) => (
     <>
         <label htmlFor={name}
                 className={styles.label}>{label}</label>
@@ -11,12 +12,13 @@ const Select = ({items, name, label, chosen, onChange}) => (
                 className={styles.select}
                 onChange={onChange}>
             <option key="-1"
-                value={null}>Wybierz opcję</option>
+                value="">Wybierz opcję</option>
             {items.map((el, index) => 
                 <option key={index}
                         value={el}>{el}</option>
             )}
         </select>
+        {error && <Error error={error} />}
     </>
 )
 

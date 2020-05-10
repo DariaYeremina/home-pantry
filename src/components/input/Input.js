@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './input.module.scss';
+import Error from '../error/Error';
 import propTypes from 'prop-types';
 
 const Input = ({type, name, placeholder, label, value, onChange, error, onBlur}) => (
@@ -12,7 +13,7 @@ const Input = ({type, name, placeholder, label, value, onChange, error, onBlur})
             onChange={onChange}
             onBlur={onBlur}
             placeholder={placeholder}/>
-    {error && <p className={styles.error}>{error}</p>}
+    {error && <Error error={error} />}
     </>
 );
 
