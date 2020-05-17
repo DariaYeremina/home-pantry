@@ -1,5 +1,10 @@
 .wrapper {
     display: flex;
+    flex-direction: column;
+}
+
+.inner {
+    display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     width: 60vw;

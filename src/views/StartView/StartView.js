@@ -2,7 +2,8 @@ import React from 'react';
 import styles from './startView.module.scss';
 import FirebaseContext from '../../Firebase/context';
 import Product from '../../components/product/Product';
-import Loader from '../../components/loader/Loader'
+import Loader from '../../components/loader/Loader';
+import FiltersBar from '../../components/filtersBar/FiltersBar';
 import bakery from '../../assets/categories/bakery.svg';
 import cake from '../../assets/categories/cake.svg';
 import cheese from '../../assets/categories/cheese.svg';
@@ -74,6 +75,7 @@ class StartView extends React.Component {
         } else {
             this.props.store.toggleDataLoading(true);
         }
+        this.props.store.getCategories(this.props.firebase);
     }
 
     render () {
@@ -83,15 +85,18 @@ class StartView extends React.Component {
         return ( 
             <FirebaseContext.Consumer>
                 {firebase => <div className={styles.wrapper}>
-                                {  this.props.store.isDataLoading ?
-                                    condition ? <h1 className={styles.title}>{headingText}</h1> : 
-                                    this.props.store.products.map((el, index) => <Product key={index} 
-                                                                                    firebase={firebase}
-                                                                                    id={el[0]}
-                                                                                    item={el[1]} 
-                                                                                    icon={this.findIconName(el[1].chosenCategory)}/>) :
-                                    <Loader />
-                                }
+                                <FiltersBar store={this.props.store} />
+                                <div className={styles.inner}>
+                                    {  this.props.store.isDataLoading ?
+                                        condition ? <h1 className={styles.title}>{headingText}</h1> : 
+                                        this.props.store.products.map((el, index) => <Product key={index} 
+                                                                                        firebase={firebase}
+                                                                                        id={el[0]}
+                                                                                        item={el[1]} 
+                                                                                        icon={this.findIconName(el[1].chosenCategory)}/>)
+                                        : <Loader />
+                                    }
+                                </div>
                              </div>
                 }
             </FirebaseContext.Consumer>

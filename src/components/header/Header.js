@@ -98,8 +98,12 @@ class Header extends React.Component{
             
             { this.state.isAddModalOpen && 
                 <FirebaseContext.Consumer>
-                    {firebase => <AddItem firebase={firebase} 
-                                          closeModal={this.closeAddModal}/>}
+                    {firebase => 
+                    <StoreConsumer>
+                        {store => <AddItem firebase={firebase} 
+                                            store={store}
+                                            closeModal={this.closeAddModal} />}
+                    </StoreConsumer>}
                 </FirebaseContext.Consumer> }
             </>
         )

@@ -1,0 +1,22 @@
+.wrapper {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 20vw;
+}
+
+.column {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.searchWrapper {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.chipsWrapper {
+    width: 100%;
+}

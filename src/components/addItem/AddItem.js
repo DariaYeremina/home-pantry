@@ -14,7 +14,6 @@ class AddItem extends React.Component {
         super(props);
         this.state = {
             title: '',
-            categories: [],
             chosenCategory: '',
             units: [],
             chosenUnit: '',
@@ -32,15 +31,6 @@ class AddItem extends React.Component {
         }
     }
 
-    getCategories = () => {
-        let get = this.props.firebase.getRequest('categories');
-        get.on('value', (snapshot) => {
-            this.setState({
-                categories: [...snapshot.val()]
-            })
-          });
-    }
-
     getUnits = () => {
         let get = this.props.firebase.getRequest('units');
         get.on('value', (snapshot) => {
@@ -51,7 +41,6 @@ class AddItem extends React.Component {
     }
 
     componentDidMount () {
-        this.getCategories();
         this.getUnits();
         this.setEntranceData();
     }
@@ -100,7 +89,7 @@ class AddItem extends React.Component {
                           handleInput={this.handleInput}
                           action={this.props.action}
                           writeAction={this.writeAction}
-                          categories={this.state.categories}
+                          categories={this.props.store.categories}
                           units={this.state.units}  />
             </div>
         )
