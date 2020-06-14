@@ -7,6 +7,13 @@
     color: #5ca368;
     text-decoration: none;
     cursor: pointer;
+    background-color: #fff;
+    &:focus{
+        outline: none;
+    }
+    &:disabled{
+        background-color: rgba(92, 163, 104, 0.2);
+    }
     &Secondary {
         @extend .button;
         background-color: #5ca368;
@@ -19,4 +26,8 @@
     width: 30px;
     height: auto;
     cursor: pointer;
+}
+
+.filter {
+    margin-right: 10px;
 }

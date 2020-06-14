@@ -10,14 +10,15 @@ const searchPlaceholder = 'Wpisz nazwę produktu...';
 
 const selectOptions = {
     label: 'Kategoria',
-    name: 'chosenOption'
+    name: 'chosenOption',
+    multiple: true
 };
 
 class FiltersBar extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            chosenOption: null,
+            chosenOption: [],
             query: '',
             showChips: false
         }
@@ -36,12 +37,31 @@ class FiltersBar extends React.Component {
         })
     }
 
+    filter = () => {
+        this.props.store.filter(this.state.chosenOption);
+    }
+
     resetSearch = () => {
         this.props.store.resetSearch();
         this.setState({
             showChips: false,
             query: ''
         })
+    }
+
+    resetFilter = () => {
+        this.props.store.resetFilter();
+        this.setState({
+            chosenOption: []
+        })
+    }
+
+    handleSelect = (e) => {
+        this.setState(prevState => ({
+            chosenOption: prevState.chosenOption.find(el => el === e)
+                            ? prevState.chosenOption.filter(el => el !== e)
+                            : [...prevState.chosenOption, e]
+        }))
     }
 
     render () {
@@ -62,10 +82,25 @@ class FiltersBar extends React.Component {
                     </div>
                 </div>
                 <div className={styles.column}>
-                    <Select name={selectOptions.name}
-                            items={this.props.store.categories}
-                            label={selectOptions.label}
-                            chosen={this.state.selectOptions}/>
+                    <div className={styles.filtersWrapper}>
+                        <Select name={selectOptions.name}
+                                multiple={selectOptions.multiple}
+                                items={this.props.store.categories}
+                                label={selectOptions.label}
+                                chosen={this.state.chosenOption}
+                                onChange={this.handleSelect}/>
+                        <div className={styles.buttonsWrapper}>
+                            <Button onClick={() => this.props.store.filter(this.state.chosenOption)}
+                                    disabled={this.state.chosenOption.length === 0}
+                                    classes={['filter']}>
+                                        Filtruj
+                            </Button>
+                            <Button onClick={this.resetFilter}
+                                    disabled={this.state.chosenOption.length === 0}>
+                                        Zresetuj
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </div>
         )

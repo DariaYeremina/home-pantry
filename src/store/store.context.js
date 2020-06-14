@@ -9,7 +9,9 @@ const StoreContext = React.createContext({
     toggleDataLoading: () => {},
     search: () => {},
     resetSearch: () => {},
-    getCategories: () => {}
+    getCategories: () => {},
+    filter: () => {},
+    resetFilter: () => {}
 });
 
 export class StoreProvider extends React.Component {
@@ -25,7 +27,9 @@ export class StoreProvider extends React.Component {
             toggleDataLoading: this.toggleDataLoading,
             search: this.search,
             resetSearch: this.resetSearch,
-            getCategories: this.getCategories
+            getCategories: this.getCategories,
+            filter: this.filter,
+            resetFilter: this.resetFilter
         }
     }
 
@@ -71,6 +75,19 @@ export class StoreProvider extends React.Component {
     };
 
     resetSearch = () => {
+        this.setState({
+            products: this.state.searchData
+        });
+    }
+
+    filter = (options) => {
+        let result = this.state.searchData.filter(el => options.includes(el[1].chosenCategory));
+        this.setState({
+            products: result
+        });
+    }
+
+    resetFilter = () => {
         this.setState({
             products: this.state.searchData
         });

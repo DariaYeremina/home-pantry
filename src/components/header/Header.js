@@ -81,7 +81,7 @@ class Header extends React.Component{
                             activeClassName={styles.navLinkActive}>Lista zakupów</NavLink>
                     {localStorage.getItem('isLogged') === 'true' && <Button onClick={this.openAddModal} secondary>Dodaj produkt</Button>}
                 </nav>
-                <div>
+                <div className={styles.buttonWrapper}>
                     <Button onClick={this.handleAuthClick}>{this.state.authButtonTitle}</Button>
                 </div>
             </header>

@@ -46,6 +46,7 @@ class Product extends React.Component {
                 </div>
             </section>
             {this.state.isModalOpen && <AddItem firebase={this.props.firebase}
+                                                store={this.props.store}
                                                 entranceData={this.props.item}
                                                 id={this.props.id}
                                                 closeModal={this.toggleModal}

@@ -20,3 +20,16 @@
 .chipsWrapper {
     width: 100%;
 }
+
+.filters {
+    &Wrapper {
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.buttonsWrapper {
+    margin-left: 15px;
+    flex-shrink: 0;
+}

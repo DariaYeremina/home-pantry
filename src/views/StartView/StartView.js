@@ -85,12 +85,13 @@ class StartView extends React.Component {
         return ( 
             <FirebaseContext.Consumer>
                 {firebase => <div className={styles.wrapper}>
-                                <FiltersBar store={this.props.store} />
+                                {this.isLogged() && <FiltersBar store={this.props.store} />}
                                 <div className={styles.inner}>
                                     {  this.props.store.isDataLoading ?
                                         condition ? <h1 className={styles.title}>{headingText}</h1> : 
                                         this.props.store.products.map((el, index) => <Product key={index} 
                                                                                         firebase={firebase}
+                                                                                        store={this.props.store}
                                                                                         id={el[0]}
                                                                                         item={el[1]} 
                                                                                         icon={this.findIconName(el[1].chosenCategory)}/>)
