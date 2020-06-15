@@ -4,6 +4,8 @@ const StoreContext = React.createContext({
     categories: [],
     products: {},
     isDataLoading: false,
+    chosenOption: [],
+    query: '',
     getProducts: () => {},
     clearProducts: () => {},
     toggleDataLoading: () => {},
@@ -11,7 +13,9 @@ const StoreContext = React.createContext({
     resetSearch: () => {},
     getCategories: () => {},
     filter: () => {},
-    resetFilter: () => {}
+    resetFilter: () => {},
+    handleInput: () => {},
+    handleChosenOption: () => {}
 });
 
 export class StoreProvider extends React.Component {
@@ -21,6 +25,8 @@ export class StoreProvider extends React.Component {
             categories: [],
             searchData: {},
             products: {},
+            chosenOption: [],
+            query: '',
             isDataLoading: false,
             getProducts: this.getProducts,
             clearProducts: this.clearProducts,
@@ -29,7 +35,9 @@ export class StoreProvider extends React.Component {
             resetSearch: this.resetSearch,
             getCategories: this.getCategories,
             filter: this.filter,
-            resetFilter: this.resetFilter
+            resetFilter: this.resetFilter,
+            handleInput: this.handleInput,
+            handleChosenOption: this.handleChosenOption
         }
     }
 
@@ -67,29 +75,56 @@ export class StoreProvider extends React.Component {
         });
     }
 
-    search = (query) => {
-        let _result = this.state.searchData.filter(el => el[1].title.toLowerCase().includes(query.toLowerCase()));
+    handleInput = (e) => {
         this.setState({
-            products: _result
-        });
-    };
-
-    resetSearch = () => {
-        this.setState({
-            products: this.state.searchData
-        });
+            [e.target.name]: e.target.value
+        })
     }
 
-    filter = (options) => {
-        let result = this.state.searchData.filter(el => options.includes(el[1].chosenCategory));
+    handleChosenOption = (e) => {
+        this.setState(prevState => ({
+            chosenOption: prevState.chosenOption.find(el => el === e)
+                            ? prevState.chosenOption.filter(el => el !== e)
+                            : [...prevState.chosenOption, e]
+        }))
+    }
+
+    filterCallback = (el) => {
+        return this.state.chosenOption.includes(el[1].chosenCategory);
+    }
+
+    searchCallback = (el) => {
+        return el[1].title.toLowerCase().includes(this.state.query.toLowerCase());
+    }
+
+    filterProductsCallback = (el) => {
+        let searchResult = this.state.query ? this.searchCallback(el) : true;
+        let filterResult = this.state.chosenOption.length > 0 ? this.filterCallback(el) : true;
+        return searchResult && filterResult;
+    }
+
+    filter = () => {
+        let result = this.state.searchData.filter(el => this.filterProductsCallback(el));
         this.setState({
             products: result
+        });
+    }    
+
+    resetSearch = () => {
+        let filterResult = this.state.chosenOption.length > 0 ? this.state.searchData.filter(el => this.filterCallback(el)) 
+                            : this.state.searchData;
+        this.setState({
+            products: filterResult,
+            query: ''
         });
     }
 
     resetFilter = () => {
+        let searchResult = this.state.query ? this.state.searchData.filter(el => this.searchCallback(el))
+                            : this.state.searchData;
         this.setState({
-            products: this.state.searchData
+            products: searchResult,
+            chosenOption: []
         });
     }
 

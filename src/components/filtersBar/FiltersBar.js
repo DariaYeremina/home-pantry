@@ -18,50 +18,22 @@ class FiltersBar extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            chosenOption: [],
-            query: '',
             showChips: false
         }
     }
 
-    handleInput = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-
     search = () => {
-        this.props.store.search(this.state.query);
+        this.props.store.filter();
         this.setState({
             showChips: true
         })
-    }
-
-    filter = () => {
-        this.props.store.filter(this.state.chosenOption);
     }
 
     resetSearch = () => {
         this.props.store.resetSearch();
         this.setState({
             showChips: false,
-            query: ''
         })
-    }
-
-    resetFilter = () => {
-        this.props.store.resetFilter();
-        this.setState({
-            chosenOption: []
-        })
-    }
-
-    handleSelect = (e) => {
-        this.setState(prevState => ({
-            chosenOption: prevState.chosenOption.find(el => el === e)
-                            ? prevState.chosenOption.filter(el => el !== e)
-                            : [...prevState.chosenOption, e]
-        }))
     }
 
     render () {
@@ -70,14 +42,14 @@ class FiltersBar extends React.Component {
                 <div className={styles.column}>
                     <div className={styles.searchWrapper}>
                         <Input name="query"
-                                value={this.state.query}
+                                value={this.props.store.query}
                                 placeholder={searchPlaceholder}
-                                onChange={this.handleInput}/>
+                                onChange={(e) => this.props.store.handleInput(e)}/>
                         <Button icon={search}
                             onClick={this.search} />
                     </div>
                     <div className={styles.chipsWrapper}>
-                        {this.state.showChips && <Chips query={this.state.query}
+                        {this.state.showChips && <Chips query={this.props.store.query}
                                                         onClick={this.resetSearch}/>}
                     </div>
                 </div>
@@ -87,16 +59,16 @@ class FiltersBar extends React.Component {
                                 multiple={selectOptions.multiple}
                                 items={this.props.store.categories}
                                 label={selectOptions.label}
-                                chosen={this.state.chosenOption}
-                                onChange={this.handleSelect}/>
+                                chosen={this.props.store.chosenOption}
+                                onChange={(e) => this.props.store.handleChosenOption(e)}/>
                         <div className={styles.buttonsWrapper}>
-                            <Button onClick={() => this.props.store.filter(this.state.chosenOption)}
-                                    disabled={this.state.chosenOption.length === 0}
+                            <Button onClick={this.props.store.filter}
+                                    disabled={this.props.store.chosenOption.length === 0}
                                     classes={['filter']}>
                                         Filtruj
                             </Button>
-                            <Button onClick={this.resetFilter}
-                                    disabled={this.state.chosenOption.length === 0}>
+                            <Button onClick={this.props.store.resetFilter}
+                                    disabled={this.props.store.chosenOption.length === 0}>
                                         Zresetuj
                             </Button>
                         </div>

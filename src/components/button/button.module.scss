@@ -13,6 +13,7 @@
     }
     &:disabled{
         background-color: rgba(92, 163, 104, 0.2);
+        cursor: auto;
     }
     &Secondary {
         @extend .button;
