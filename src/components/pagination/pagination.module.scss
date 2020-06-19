@@ -1,0 +1,23 @@
+.wrapper {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.amount {
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 7px;
+    &:hover {
+        color: #5ca368;
+    }
+    &Active {
+        cursor: default;
+        display: inline-block;
+        margin-right: 7px;
+        color: #5ca368;
+        font-weight: 700;
+    }
+}

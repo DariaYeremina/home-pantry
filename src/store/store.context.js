@@ -6,6 +6,8 @@ const StoreContext = React.createContext({
     isDataLoading: false,
     chosenOption: [],
     query: '',
+    amountPerPage: 10,
+    page: 1,
     getProducts: () => {},
     clearProducts: () => {},
     toggleDataLoading: () => {},
@@ -15,7 +17,8 @@ const StoreContext = React.createContext({
     filter: () => {},
     resetFilter: () => {},
     handleInput: () => {},
-    handleChosenOption: () => {}
+    handleChosenOption: () => {},
+    setAmountPerPage: () => {}
 });
 
 export class StoreProvider extends React.Component {
@@ -27,6 +30,8 @@ export class StoreProvider extends React.Component {
             products: {},
             chosenOption: [],
             query: '',
+            amountPerPage: 10,
+            page: 1,
             isDataLoading: false,
             getProducts: this.getProducts,
             clearProducts: this.clearProducts,
@@ -37,7 +42,8 @@ export class StoreProvider extends React.Component {
             filter: this.filter,
             resetFilter: this.resetFilter,
             handleInput: this.handleInput,
-            handleChosenOption: this.handleChosenOption
+            handleChosenOption: this.handleChosenOption,
+            setAmountPerPage: this.setAmountPerPage
         }
     }
 
@@ -126,6 +132,14 @@ export class StoreProvider extends React.Component {
             products: searchResult,
             chosenOption: []
         });
+    }
+
+    setAmountPerPage = (el) => {
+        if (el !== this.state.amountPerPage) {
+            this.setState({
+                amountPerPage: el
+            });
+        }
     }
 
     render () {

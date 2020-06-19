@@ -4,6 +4,7 @@ import FirebaseContext from '../../Firebase/context';
 import Product from '../../components/product/Product';
 import Loader from '../../components/loader/Loader';
 import FiltersBar from '../../components/filtersBar/FiltersBar';
+import Pagination from '../../components/pagination/Pagination';
 import bakery from '../../assets/categories/bakery.svg';
 import cake from '../../assets/categories/cake.svg';
 import cheese from '../../assets/categories/cheese.svg';
@@ -97,6 +98,7 @@ class StartView extends React.Component {
                                                                                         icon={this.findIconName(el[1].chosenCategory)}/>)
                                         : <Loader />
                                     }
+                                    <Pagination store={this.props.store}/>
                                 </div>
                              </div>
                 }
